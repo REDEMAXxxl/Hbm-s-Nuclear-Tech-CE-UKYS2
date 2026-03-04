@@ -403,6 +403,7 @@
 	"block.warnOverspeed": {"category": "block", "sounds": [{"name": "hbm:block/warnoverspeed", "stream": false}]},
     "block.boilerGroan": {"category": "block", "sounds": ["hbm:block/boilerGroan0", "hbm:block/boilerGroan1", "hbm:block/boilerGroan2"]},
 	"block.steamEngineOperate": {"category": "block", "sounds": [{"name": "hbm:block/steamengineoperate", "stream": false}]},
+	"block.largeTurbine": {"category": "block", "sounds": [{"name": "hbm:block/largeTurbine", "stream": false}]},
 	"block.chungusTurbineRunning": {"category": "block", "sounds": [{"name": "hbm:block/chungusturbine", "stream": false}]},
 	"block.electricHum": {"category": "block", "sounds": [{"name": "hbm:block/electricHum", "stream": false}]},
 	"block.fensuHum": {"category": "block", "sounds": [{"name": "hbm:block/fensuHum", "stream": false}]},

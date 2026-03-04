@@ -32,16 +32,22 @@ templates/JEI/category/render assets
 - Fixed simulation side effects in power transfer paths (REDD, charger, capacitor, cable diode)
 - Fixed siren track indexing/model registration
 - Fixed `ore_oil` being unbreakable
+- Fixed MHD Turbine and Boiler missing Forge capability compatibility
+- Fixed some latent misuse issues of Vec3d methods
+- Fixed Multi Fluid ID not working when another item is held off-hand
+- Fixed Industrial Turbine not having any sound
 
 ### Changes
 - Assembly Factory now exposes truly separate recipe ports using position-aware slot access
 - Starter kit now provides new assembly/chemical machine variants instead of removed legacy ones
 - Template folder now focuses on crucible templates after removing legacy assembly/chem templates
+- Reworked Conveyor blocks to match upstream behavior
 
 ### New Features
 - Ported colored scaffold variants and their dynamic baked model
 - Added OpenComputers callbacks for artillery turrets, including manual coordinate queueing
 - Ported plushies with per-type models, sounds, and squish animation
+- Added fake HE/RF converters (PR #1396 by Leafia)
 
 ### Performance
 - Added baked-quad caches for Combinator Funnel and Spotlight models
