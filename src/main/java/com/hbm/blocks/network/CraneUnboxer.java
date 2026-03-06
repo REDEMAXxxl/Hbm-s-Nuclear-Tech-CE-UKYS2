@@ -36,21 +36,23 @@ public class CraneUnboxer extends BlockCraneBase implements IEnterableBlock {
     @Override
     public void registerSprite(TextureMap map) {
         super.registerSprite(map);
-        this.iconOut = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/crane_box"));
-        this.iconSideOut = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/crane_side_box"));
+        this.iconIn = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/crane_box"));
+        this.iconSideIn = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/crane_side_box"));
+        this.iconOut = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/crane_in"));
+        this.iconSideOut = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/crane_side_in"));
         this.iconDirectional = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/crane_unboxer_top"));
-        this.iconDirectionalUp = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/crane_unboxer_side_down"));
-        this.iconDirectionalDown = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/crane_unboxer_side_up"));
-        this.iconDirectionalTurnLeft = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/crane_unboxer_top_right"));
-        this.iconDirectionalTurnRight = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/crane_unboxer_top_left"));
-        this.iconDirectionalSideLeftTurnUp = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/crane_unboxer_side_up_turn_left"));
-        this.iconDirectionalSideRightTurnUp = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/crane_unboxer_side_up_turn_right"));
-        this.iconDirectionalSideLeftTurnDown = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/crane_unboxer_side_down_turn_left"));
-        this.iconDirectionalSideRightTurnDown = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/crane_unboxer_side_down_turn_right"));
-        this.iconDirectionalSideUpTurnLeft = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/crane_unboxer_side_left_turn_up"));
-        this.iconDirectionalSideUpTurnRight = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/crane_unboxer_side_right_turn_up"));
-        this.iconDirectionalSideDownTurnLeft = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/crane_unboxer_side_left_turn_down"));
-        this.iconDirectionalSideDownTurnRight = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/crane_unboxer_side_right_turn_down"));
+        this.iconDirectionalUp = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/crane_unboxer_side_up"));
+        this.iconDirectionalDown = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/crane_unboxer_side_down"));
+        this.iconDirectionalTurnLeft = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/crane_unboxer_top_left"));
+        this.iconDirectionalTurnRight = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/crane_unboxer_top_right"));
+        this.iconDirectionalSideLeftTurnUp = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/crane_unboxer_side_left_turn_up"));
+        this.iconDirectionalSideRightTurnUp = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/crane_unboxer_side_right_turn_up"));
+        this.iconDirectionalSideLeftTurnDown = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/crane_unboxer_side_left_turn_down"));
+        this.iconDirectionalSideRightTurnDown = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/crane_unboxer_side_right_turn_down"));
+        this.iconDirectionalSideUpTurnLeft = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/crane_unboxer_side_up_turn_left"));
+        this.iconDirectionalSideUpTurnRight = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/crane_unboxer_side_up_turn_right"));
+        this.iconDirectionalSideDownTurnLeft = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/crane_unboxer_side_down_turn_left"));
+        this.iconDirectionalSideDownTurnRight = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/crane_unboxer_side_down_turn_right"));
     }
 
     @Override
@@ -64,7 +66,7 @@ public class CraneUnboxer extends BlockCraneBase implements IEnterableBlock {
     @Override
     public boolean canPackageEnter(World world, int x, int y, int z, EnumFacing dir, IConveyorPackage entity) {
         TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
-        return te instanceof TileEntityCraneBase crane && crane.getOutputSide() == dir;
+        return te instanceof TileEntityCraneBase crane && crane.getInputSide() == dir;
     }
 
     @Override
