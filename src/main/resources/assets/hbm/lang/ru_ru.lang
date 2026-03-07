@@ -1739,6 +1739,7 @@ entity.entity_mob_volatile_creeper.name=Возгораемый крипер
 entity.entity_ntm_fbi.name=Агент ФБР
 entity.entity_ntm_fbi_drone.name=Дрон ФБР
 entity.entity_ntm_radiation_blaze.name=Элементаль Расплавления
+entity.entity_ntm_test_dummy.name=Тестовый манекен
 entity.entity_ntm_ufo.name=Корабль марсианского вторжения
 entity.entity_nuclear_creeper.name=Ядерный крипер
 entity.entity_parasite_maggot.name=Паразитическая личинка

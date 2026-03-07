@@ -1743,6 +1743,7 @@ entity.entity_mob_volatile_creeper.name=Volatile Creeper
 entity.entity_ntm_fbi.name=FBI Agent
 entity.entity_ntm_fbi_drone.name=FBI Drone
 entity.entity_ntm_radiation_blaze.name=Meltdown Elemental
+entity.entity_ntm_test_dummy.name=Test Dummy
 entity.entity_ntm_ufo.name=Martian Invasion Ship
 entity.entity_nuclear_creeper.name=Nuclear Creeper
 entity.entity_parasite_maggot.name=Parasitic Maggot

@@ -111,6 +111,7 @@ public class TileEntityMassStorage extends TileEntityCrateBase implements IBufPa
         buf.writeInt(getStockpile());
         buf.writeBoolean(output);
         ByteBufUtils.writeItemStack(buf, inventory.getStackInSlot(1));
+        buf.writeInt(this.capacity);
     }
 
     @Override
@@ -118,6 +119,7 @@ public class TileEntityMassStorage extends TileEntityCrateBase implements IBufPa
         this.stack = buf.readInt();
         this.output = buf.readBoolean();
         this.type = ByteBufUtils.readItemStack(buf);
+        this.capacity = buf.readInt();
     }
 
     public void networkPackNT(int range) {
