@@ -304,7 +304,8 @@ public class ResourceManager {
     // Autosaw
     public static final IModelCustom autosaw = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/machines/autosaw.obj"));
     //Cables
-    public static final IModelCustom cable_neo = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/blocks/cable_neo.obj")).asVBO();
+    public static final HFRWavefrontObject cable_neo_obj = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/blocks/cable_neo.obj"));
+//    public static final IModelCustom cable_neo = cable_neo_obj.asVBO(); unused
     //Big Cables
     public static final IModelCustom connector = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/network/connector.obj")).asVBO();
     public static final IModelCustom pylon_large = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/network/pylon_large.obj")).asVBO();
