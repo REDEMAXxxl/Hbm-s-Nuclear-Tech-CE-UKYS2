@@ -2,6 +2,7 @@ package com.hbm.handler;
 
 import com.hbm.capability.NTMFluidCapabilityHandler;
 import com.hbm.inventory.fluid.FluidType;
+import com.hbm.items.machine.ItemFluidTankV2;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
@@ -18,14 +19,15 @@ public class FluidTankV2Handler extends FluidHandlerItemStack {
     public int fill(FluidStack resource, boolean doFill) {
         if (resource == null || resource.amount <= 0) return 0;
 
-        if (doFill) {
+        int filled = super.fill(resource, doFill);
+        if (doFill && filled > 0) {
             FluidType type = NTMFluidCapabilityHandler.getFluidType(resource.getFluid());
             if (type != null) {
                 container.setItemDamage(type.getID());
             }
         }
 
-        return super.fill(resource, doFill);
+        return filled;
     }
 
     @Override
@@ -36,11 +38,21 @@ public class FluidTankV2Handler extends FluidHandlerItemStack {
             FluidStack remaining = super.getFluid();
             if (remaining == null || remaining.amount <= 0) {
                 container.setItemDamage(0); // metadata = empty
-                container.setTagCompound(null);
+                container.removeSubCompound("fluid");
+                NBTTagCompound tagCompound = container.getTagCompound();
+                if (tagCompound != null && tagCompound.isEmpty()) {
+                    container.setTagCompound(null);
+                }
             }
         }
 
         return drained;
+    }
+
+    @Override
+    public boolean canFillFluidType(FluidStack fluid) {
+        FluidType type = NTMFluidCapabilityHandler.getFluidType(fluid.getFluid());
+        return container.getItem() instanceof ItemFluidTankV2 tank && tank.canStoreFluid(type);
     }
 
     @Override
@@ -60,6 +72,6 @@ public class FluidTankV2Handler extends FluidHandlerItemStack {
         if (tag != null) {
             return FluidStack.loadFluidStackFromNBT(tag);
         }
-        return null;
+        return super.getFluid();
     }
 }

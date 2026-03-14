@@ -151,7 +151,7 @@ public class ItemFluidTankV2 extends ItemBakedBase {
 		for(int i = 1; i < order.length; ++i) {
 			FluidType type = order[i];
 
-			if(type.hasNoContainer() || type.getFF() == null) continue;
+			if(type.hasNoContainer() || type.getFF() == null || !canStoreFluid(type)) continue;
 
 			int id = type.getID();
 
@@ -192,13 +192,25 @@ public class ItemFluidTankV2 extends ItemBakedBase {
 
     @Override
     public boolean hasContainerItem(@NotNull ItemStack item) {
-        return true;
+        FluidStack fluid = FluidUtil.getFluidContained(item);
+        return fluid != null && fluid.amount > 0;
     }
 
     @Override
     public @NotNull ItemStack getContainerItem(@NotNull ItemStack item) {
-        return FluidContainerRegistry.getEmptyContainer(item);
+        if (!hasContainerItem(item)) {
+            return ItemStack.EMPTY;
+        }
+        ItemStack empty = item.copy();
+        empty.setCount(1);
+        empty.setItemDamage(0);
+        empty.setTagCompound(null);
+        return empty;
     }
+
+	public boolean canStoreFluid(@Nullable FluidType type) {
+		return type != null && (this == ModItems.fluid_tank_lead_v2 || !type.needsLeadContainer());
+	}
 
 	// FluidContainerRegistry Helpers
 	/**
