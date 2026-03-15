@@ -10,10 +10,9 @@ import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemRBMKLid;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.main.MainRegistry;
+import com.hbm.render.model.RBMKColumnBakedModel;
 import com.hbm.tileentity.machine.rbmk.RBMKDials;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKBase;
-import com.hbm.render.model.RBMKColumnBakedModel;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -82,7 +81,15 @@ public abstract class RBMKBase extends BlockDummyable implements IToolable, ILoo
 	public boolean shouldSideBeRendered(@NotNull IBlockState blockState, @NotNull IBlockAccess blockAccess, @NotNull BlockPos pos, @NotNull EnumFacing side) {
 		if(overrideOnlyRenderSides && side.getAxis().isVertical()) return false;
 		if(renderLid != LID_NONE && side != EnumFacing.DOWN && side != EnumFacing.UP) return true;
-		return super.shouldSideBeRendered(blockState, blockAccess, pos, side);
+
+		BlockPos neighborPos = pos.offset(side);
+		IBlockState neighborState = blockAccess.getBlockState(neighborPos);
+
+		if(neighborState.getBlock() instanceof RBMKBase) {
+			return false;
+		}
+
+		return !neighborState.doesSideBlockRendering(blockAccess, neighborPos, side.getOpposite());
 	}
 
 	public boolean hasOwnLid() {

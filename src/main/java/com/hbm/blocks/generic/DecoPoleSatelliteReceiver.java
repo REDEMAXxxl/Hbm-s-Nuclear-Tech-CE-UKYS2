@@ -51,7 +51,7 @@ public class DecoPoleSatelliteReceiver extends BlockContainer implements INBTBlo
 
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state) {
-		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
+        return EnumBlockRenderType.MODEL;
 	}
 
 	@Override

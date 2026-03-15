@@ -29,11 +29,7 @@ import com.hbm.main.MainRegistry;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.GuiCTMWarning;
 import com.hbm.render.icon.RegistrationUtils;
-import com.hbm.render.item.FancyMissingModelPerspective;
-import com.hbm.render.item.BakedModelNoFPV;
-import com.hbm.render.item.TEISRBase;
-import com.hbm.render.item.TemplateBakedModel;
-import com.hbm.render.item.WrappedTEISRModel;
+import com.hbm.render.item.*;
 import com.hbm.render.item.weapon.B92BakedModel;
 import com.hbm.render.item.weapon.ItemRedstoneSwordRender;
 import com.hbm.render.item.weapon.ItemRenderGunAnim;
@@ -42,6 +38,7 @@ import com.hbm.render.tileentity.*;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.model.ModelRotation;
@@ -51,6 +48,7 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.Items;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -59,9 +57,11 @@ import net.minecraft.util.registry.IRegistry;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -239,6 +239,7 @@ public class NTMClientRegistry {
         ItemAutogen.registerSprites(map);
 
         IDynamicModels.registerSprites(map);
+        StaticTesrBakedModels.registerSprites(map);
 
         //Debug stuff
         debugPower = map.registerSprite(new ResourceLocation(Tags.MODID, "particle/debug_power"));
@@ -533,10 +534,10 @@ public class NTMClientRegistry {
         IDynamicModels.bakeModels(evt);
 
 
+        IRegistry<ModelResourceLocation, IBakedModel> registry = evt.getModelRegistry();
         for (SpecialContainerFillLists.EnumCanister e : SpecialContainerFillLists.EnumCanister.VALUES) {
-            Object o = evt.getModelRegistry().getObject(e.getResourceLocation());
-            if (o instanceof IBakedModel)
-                e.putRenderModel((IBakedModel) o);
+            IBakedModel o = registry.getObject(e.getResourceLocation());
+            e.putRenderModel(o);
         }
         for (SpecialContainerFillLists.EnumCell cellType : SpecialContainerFillLists.EnumCell.VALUES) {
             FluidType fluid = cellType.getFluid();
@@ -548,28 +549,22 @@ public class NTMClientRegistry {
             );
         }
         for (SpecialContainerFillLists.EnumGasCanister e : SpecialContainerFillLists.EnumGasCanister.VALUES) {
-            Object o = evt.getModelRegistry().getObject(e.getResourceLocation());
-            if (o instanceof IBakedModel)
-                e.putRenderModel((IBakedModel) o);
+            IBakedModel o = registry.getObject(e.getResourceLocation());
+            e.putRenderModel(o);
         }
 
         ResourceManager.init();
-        Object object1 = evt.getModelRegistry().getObject(RedstoneSword.rsModel);
-        if (object1 instanceof IBakedModel) {
-            IBakedModel model = (IBakedModel) object1;
-            ItemRedstoneSwordRender.INSTANCE.itemModel = model;
-            evt.getModelRegistry().putObject(RedstoneSword.rsModel, new ItemRenderRedstoneSword());
-        }
+        ItemRedstoneSwordRender.INSTANCE.itemModel = registry.getObject(RedstoneSword.rsModel);
+        registry.putObject(RedstoneSword.rsModel, new ItemRenderRedstoneSword());
         wrapModel(evt, ItemCrucibleTemplate.location);
-        Object object3 = evt.getModelRegistry().getObject(GunB92.b92Model);
-        if (object3 instanceof IBakedModel) {
-            IBakedModel model = (IBakedModel) object3;
-            ItemRenderGunAnim.INSTANCE.b92ItemModel = model;
-            evt.getModelRegistry().putObject(GunB92.b92Model, new B92BakedModel());
-        }
+        ItemRenderGunAnim.INSTANCE.b92ItemModel = registry.getObject(GunB92.b92Model);
+        registry.putObject(GunB92.b92Model, new B92BakedModel());
+        wrapAllTeisrModels(registry);
+    }
 
-        IRegistry<ModelResourceLocation, IBakedModel> reg = evt.getModelRegistry();
-        wrapAllTeisrModels(reg);
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onModelBakeLast(ModelBakeEvent evt) {
+        StaticTesrBakedModels.bakeModels(evt.getModelRegistry());
     }
 
     private void wrapModel(ModelBakeEvent event, ModelResourceLocation location) {

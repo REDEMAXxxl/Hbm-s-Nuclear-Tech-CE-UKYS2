@@ -40,7 +40,7 @@ public class MachinePuF6Tank extends BlockContainer implements IMultiBlock {
 	
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state) {
-		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
+        return EnumBlockRenderType.MODEL;
 	}
 
 	@Override
