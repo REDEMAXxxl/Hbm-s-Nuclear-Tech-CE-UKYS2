@@ -49,16 +49,46 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build with Gradle
-        run: ./gradlew build --no-daemon
+        run: ./gradlew releaseBuild --no-daemon
+
+      - name: Prepare artifact bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+
+          OUT_DIR="build/artifact-upload"
+          rm -rf "$OUT_DIR"
+          mkdir -p "$OUT_DIR"
+
+          for file in build/libs/*-sources.jar build/libs/*-dev.jar build/libs/*-dev-java25.jar; do
+            cp "$file" "$OUT_DIR/$(basename "$file")"
+          done
+
+          for file in build/publication-libs/*.jar; do
+            name=$(basename "$file")
+            case "$name" in
+              *-java25-publish-api.jar)
+                compat_name="${name%-java25-publish-api.jar}-api-java25.jar"
+                ;;
+              *-java25-publish-dev-compile.jar)
+                compat_name="${name%-java25-publish-dev-compile.jar}-dev-compile-java25.jar"
+                ;;
+              *-java25-publish.jar)
+                compat_name="${name%-java25-publish.jar}-java25.jar"
+                ;;
+              *)
+                compat_name="$name"
+                ;;
+            esac
+            cp "$file" "$OUT_DIR/$compat_name"
+          done
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: nightly-artifacts
-          path: |
-            build/libs/*-sources.jar
-            build/libs/*-dev.jar
-            build/libs/*-dev-java25.jar
+          path: build/artifact-upload/**
           if-no-files-found: error
 
       - name: Create nightly tag
@@ -83,10 +113,7 @@ jobs:
             - For normal end-user downloads, use CurseForge or Modrinth (see project README).
             - For bleeding-edge builds, use GitHub Actions artifacts. They could be unstable, use at your own risk.
             Commit: `${{ github.sha }}`
-          files: |
-            build/libs/*-sources.jar
-            build/libs/*-dev.jar
-            build/libs/*-dev-java25.jar
+          files: build/artifact-upload/*.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

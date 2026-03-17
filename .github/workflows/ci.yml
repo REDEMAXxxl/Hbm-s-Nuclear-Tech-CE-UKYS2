@@ -39,16 +39,52 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew releaseBuild
+
+      - name: Prepare artifact bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+
+          OUT_DIR="build/artifact-upload"
+          rm -rf "$OUT_DIR"
+          mkdir -p "$OUT_DIR"
+
+          for file in build/libs/*; do
+            name=$(basename "$file")
+            case "$name" in
+              *-downgraded.jar|*-dev-shadow.jar)
+                continue
+                ;;
+            esac
+            cp "$file" "$OUT_DIR/$name"
+          done
+
+          for file in build/publication-libs/*.jar; do
+            name=$(basename "$file")
+            case "$name" in
+              *-java25-publish-api.jar)
+                compat_name="${name%-java25-publish-api.jar}-api-java25.jar"
+                ;;
+              *-java25-publish-dev-compile.jar)
+                compat_name="${name%-java25-publish-dev-compile.jar}-dev-compile-java25.jar"
+                ;;
+              *-java25-publish.jar)
+                compat_name="${name%-java25-publish.jar}-java25.jar"
+                ;;
+              *)
+                compat_name="$name"
+                ;;
+            esac
+            cp "$file" "$OUT_DIR/$compat_name"
+          done
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: ${{ github.event.repository.name }}
-          path: |
-            build/libs/**
-            !build/libs/**/*-downgraded.jar
-            !build/libs/**/*-dev-shadow.jar
+          path: build/artifact-upload/**
           if-no-files-found: error
 
       - name: Run server
