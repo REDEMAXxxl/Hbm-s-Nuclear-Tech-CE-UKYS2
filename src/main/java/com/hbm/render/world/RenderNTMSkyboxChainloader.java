@@ -57,7 +57,8 @@ public class RenderNTMSkyboxChainloader extends IRenderHandler { //why an abstra
         GlStateManager.enableBlend();
         GlStateManager.disableAlpha();
         GlStateManager.disableFog();
-        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE); // additive
+        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE,
+                GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO); // additive
 
         if (ModEventHandlerClient.renderLodeStar) {
             GlStateManager.pushMatrix();
