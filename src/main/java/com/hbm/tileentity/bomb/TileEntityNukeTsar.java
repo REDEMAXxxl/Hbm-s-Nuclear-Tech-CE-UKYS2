@@ -19,6 +19,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.UUID;
@@ -96,53 +97,18 @@ public class TileEntityNukeTsar extends TileEntity implements ITickable, IGUIPro
 		return super.writeToNBT(compound);
 	}
 
-	public boolean isCoreFilled(){
-		return inventory.getStackInSlot(0).getItem() == ModItems.man_core;
+    public boolean isReady() {
+        return inventory.getStackInSlot(0).getItem() == ModItems.explosive_lenses &&
+                inventory.getStackInSlot(1).getItem() == ModItems.explosive_lenses &&
+                inventory.getStackInSlot(2).getItem() == ModItems.explosive_lenses &&
+                inventory.getStackInSlot(3).getItem() == ModItems.explosive_lenses &&
+                inventory.getStackInSlot(4).getItem() == ModItems.man_core;
 	}
 
-	public boolean isTopLeftLenseFilled(){
-		return inventory.getStackInSlot(1).getItem() == ModItems.explosive_lenses;
-	}
-	public boolean isTopRightLenseFilled(){
-		return inventory.getStackInSlot(2).getItem() == ModItems.explosive_lenses;
-	}
-	public boolean isBottomLeftLenseFilled(){
-		return inventory.getStackInSlot(3).getItem() == ModItems.explosive_lenses;
-	}
-	public boolean isBottomRightLenseFilled() {
-		return inventory.getStackInSlot(4).getItem() == ModItems.explosive_lenses;
-	}
-
-	public boolean isStage1UFilled(){
-		return inventory.getStackInSlot(5).getItem() == ModItems.mike_core;
-	}
-	public boolean isStage1DFilled(){
-		return inventory.getStackInSlot(6).getItem() == ModItems.mike_deut;
-	}
-
-	public boolean isStage2UFilled(){
-		return inventory.getStackInSlot(7).getItem() == ModItems.mike_core;
-	}
-	public boolean isStage2DFilled(){
-		return inventory.getStackInSlot(8).getItem() == ModItems.mike_deut;
-	}
-
-	public boolean isReady() {
-		return (isCoreFilled() && isTopLeftLenseFilled() && isTopRightLenseFilled() && isBottomLeftLenseFilled() && isBottomRightLenseFilled());
-	}
-	
-	public boolean isStage1Filled() {
-		return (isReady() && isStage1UFilled() && isStage1DFilled());
-	}
-
-	public boolean isStage2Filled() {
-		return (isReady() && isStage2UFilled() && isStage2DFilled());
-	}
-
-	public boolean isStage3Filled() {
-		return (isStage1Filled() && isStage2UFilled() && isStage2DFilled());
-	}
-
+    public boolean isFilled() {
+        IItemHandler inv = inventory;
+        return isReady() && inv.getStackInSlot(5).getItem() == ModItems.tsar_core;
+    }
 	
 	public void clearSlots() {
 		for(int i = 0; i < inventory.getSlots(); i++)

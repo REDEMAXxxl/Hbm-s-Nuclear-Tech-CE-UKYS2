@@ -2,6 +2,7 @@ package com.hbm.inventory.gui;
 
 import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerNukeTsar;
+import com.hbm.items.ModItems;
 import com.hbm.tileentity.bomb.TileEntityNukeTsar;
 import com.hbm.util.I18nUtil;
 import net.minecraft.client.Minecraft;
@@ -9,6 +10,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.items.IItemHandler;
 
 public class GUINukeTsar extends GuiInfoContainer {
 
@@ -49,18 +51,23 @@ public class GUINukeTsar extends GuiInfoContainer {
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
 		Minecraft.getMinecraft().getTextureManager().bindTexture(textureMike);
+        IItemHandler inv = tsar.inventory;
 
-		if(tsar.isStage3Filled()) drawTexturedModalRect(guiLeft + 18, guiTop + 50, 176, 18, 16, 16);
-		else if(tsar.isReady()) drawTexturedModalRect(guiLeft + 18, guiTop + 50, 176, 0, 16, 16);
+        if(tsar.isFilled()) drawTexturedModalRect(guiLeft + 18, guiTop + 50, 176, 18, 16, 16);
+        else if(tsar.isReady()) drawTexturedModalRect(guiLeft + 18, guiTop + 50, 176, 0, 16, 16);
 
-		if(tsar.isTopLeftLenseFilled()) drawTexturedModalRect(guiLeft + 24 + 16, guiTop + 20 + 16, 209, 1, 23, 23);
-		if(tsar.isTopRightLenseFilled()) drawTexturedModalRect(guiLeft + 47 + 16, guiTop + 20 + 16, 232, 1, 23, 23);
-		if(tsar.isBottomLeftLenseFilled()) drawTexturedModalRect(guiLeft + 24 + 16, guiTop + 43 + 16, 209, 24, 23, 23);
-		if(tsar.isBottomRightLenseFilled()) drawTexturedModalRect(guiLeft + 47 + 16, guiTop + 43 + 16, 232, 24, 23, 23);
+        for(int i = 0; i < 4; i++) {
+            if(inv.getStackInSlot(i).getItem() == ModItems.explosive_lenses) switch(i) {
+                case 0: drawTexturedModalRect(guiLeft + 24 + 16, guiTop + 20 + 16, 209, 1, 23, 23); break;
+                case 2: drawTexturedModalRect(guiLeft + 47 + 16, guiTop + 20 + 16, 232, 1, 23, 23); break;
+                case 1: drawTexturedModalRect(guiLeft + 24 + 16, guiTop + 43 + 16, 209, 24, 23, 23); break;
+                case 3: drawTexturedModalRect(guiLeft + 47 + 16, guiTop + 43 + 16, 232, 24, 23, 23); break;
+            }
+        }
 
-		if(tsar.isStage1Filled() || tsar.isStage2Filled() || tsar.isStage3Filled())
-			drawTexturedModalRect(guiLeft + 75 + 16, guiTop + 25 + 16, 176, 220, 80, 36);
+        if(inv.getStackInSlot(5).getItem() == ModItems.tsar_core)
+            drawTexturedModalRect(guiLeft + 75 + 16, guiTop + 25 + 16, 176, 220, 80, 36);
 
-		this.drawInfoPanel(guiLeft - 16, guiTop + 16, 16, 16, 2);
+        this.drawInfoPanel(guiLeft - 16, guiTop + 16, 16, 16, 2);
 	}
 }

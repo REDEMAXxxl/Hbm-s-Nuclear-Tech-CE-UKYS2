@@ -15,8 +15,6 @@ import org.lwjgl.input.Keyboard;
 import java.util.HashMap;
 import java.util.Map;
 
-//Modified vesion of LeafiaGripOffsetHelper.java by abysschroma
-//https://github.com/abysschroma/NTM-but-uncomfortable/blob/main/src/main/java/com/leafia/dev/items/LeafiaGripOffsetHelper.java
 /**
  * Interactive transform debugger for item and view-model renderers.
  *
@@ -47,10 +45,13 @@ import java.util.Map;
  *   <li><b>Tab</b>: fine adjustment step</li>
  *   <li><b>Space</b>: print the current transform to chat</li>
  * </ul>
+ *
+ * @author Leafia
+ * @see <a href="https://github.com/abysschroma/NTM-but-uncomfortable/blob/main/src/main/java/com/leafia/dev/items/LeafiaGripOffsetHelper.java">LeafiaGripOffsetHelper</a>
  */
 @SideOnly(Side.CLIENT)
 public class ViewModelPositonDebugger {
-    static boolean debug = true;
+    static boolean debug = false;
     static boolean blockInput = false;
 
     public Map<TransformType, offset> offsetMap;
