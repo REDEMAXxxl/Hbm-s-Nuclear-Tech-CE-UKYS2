@@ -32,6 +32,11 @@ public class ItemBlockSpecialAABB<T extends Block & IBlockSpecialPlacementAABB> 
     }
 
     @Override
+    public int getMetadata(int damage) {
+        return damage;
+    }
+
+    @Override
     public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         IBlockState iblockstate = worldIn.getBlockState(pos);
         Block block = iblockstate.getBlock();

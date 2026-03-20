@@ -108,18 +108,21 @@ public class BlockPlushie extends BlockContainer implements IBlockMulti, IToolti
     @Override
     @SideOnly(Side.CLIENT)
     public void getSubBlocks(@NotNull CreativeTabs itemIn, @NotNull NonNullList<ItemStack> items) {
-        for (int i = 1; i < PlushieType.values().length; i++)
+        for (int i = 1; i < PlushieType.VALUES.length; i++)
             items.add(new ItemStack(this, 1, i));
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, @NotNull BlockPos pos, @NotNull IBlockState state, EntityLivingBase placer, @NotNull ItemStack stack) {
-        int meta = MathHelper.floor((double) ((placer.rotationYaw + 180.0F) * 16.0F / 360.0F) + 0.5D) & 15;
-        worldIn.setBlockState(pos, this.getDefaultState().withProperty(META, meta), 2);
+    public @NotNull IBlockState getStateForPlacement(World worldIn, @NotNull BlockPos pos, @NotNull EnumFacing facing, float hitX, float hitY, float hitZ, int meta, @NotNull EntityLivingBase placer) {
+        int rotation = MathHelper.floor((double) ((placer.rotationYaw + 180.0F) * 16.0F / 360.0F) + 0.5D) & 15;
+        return this.getDefaultState().withProperty(META, rotation);
+    }
 
+    @Override
+    public void onBlockPlacedBy(World worldIn, @NotNull BlockPos pos, @NotNull IBlockState state, EntityLivingBase placer, @NotNull ItemStack stack) {
         TileEntity te = worldIn.getTileEntity(pos);
         if (te instanceof TileEntityPlushie plushie) {
-            plushie.type = PlushieType.values()[Math.abs(stack.getItemDamage()) % PlushieType.values().length];
+            plushie.type = PlushieType.VALUES[Math.abs(stack.getItemDamage()) % PlushieType.VALUES.length];
             plushie.markDirty();
         }
     }
@@ -169,7 +172,7 @@ public class BlockPlushie extends BlockContainer implements IBlockMulti, IToolti
         @SuppressWarnings("deprecation")
         @Override
         public @NotNull String getItemStackDisplayName(ItemStack stack) {
-            PlushieType type = PlushieType.values()[Math.abs(stack.getItemDamage()) % PlushieType.values().length];
+            PlushieType type = PlushieType.VALUES[Math.abs(stack.getItemDamage()) % PlushieType.VALUES.length];
             return I18n.translateToLocalFormatted(this.getTranslationKey() + ".name", type == PlushieType.NONE ? "" : type.label).trim();
         }
     }
@@ -201,12 +204,12 @@ public class BlockPlushie extends BlockContainer implements IBlockMulti, IToolti
 
     @Override
     public int getSubCount() {
-        return PlushieType.values().length;
+        return PlushieType.VALUES.length;
     }
 
     @Override
     public void addInformation(ItemStack stack, World worldIn, @NotNull List<String> list, @NotNull ITooltipFlag flagIn) {
-        PlushieType type = PlushieType.values()[Math.abs(stack.getItemDamage()) % PlushieType.values().length];
+        PlushieType type = PlushieType.VALUES[Math.abs(stack.getItemDamage()) % PlushieType.VALUES.length];
         if (type.inscription != null) list.add(type.inscription);
     }
 
@@ -260,7 +263,7 @@ public class BlockPlushie extends BlockContainer implements IBlockMulti, IToolti
         @Override
         public void readFromNBT(@NotNull NBTTagCompound nbt) {
             super.readFromNBT(nbt);
-            this.type = PlushieType.values()[Math.abs(nbt.getByte("type")) % PlushieType.values().length];
+            this.type = PlushieType.VALUES[Math.abs(nbt.getByte("type")) % PlushieType.VALUES.length];
         }
 
         @Override
@@ -272,7 +275,7 @@ public class BlockPlushie extends BlockContainer implements IBlockMulti, IToolti
 
         @Override
         public void transformTE(World world, int coordBaseMode) {
-            type = PlushieType.values()[world.rand.nextInt(PlushieType.values().length - 1) + 1];
+            type = PlushieType.VALUES[world.rand.nextInt(PlushieType.VALUES.length - 1) + 1];
         }
     }
 }
