@@ -7,10 +7,8 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.ApiStatus.OverrideOnly;
 import org.lwjgl.input.Keyboard;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -38,11 +36,10 @@ import java.util.List;
  * assume an inherited vanilla superclass implementation will satisfy them merely because the names
  * coincide in dev.</li>
  * </ul>
+ *
+ * Update: mixin is retarded. im removing these two interface methods.
  */
 public interface ITooltipProvider {
-
-    @OverrideOnly
-    void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn);
 
     default void addStandardInfo(List<String> list) {
 
